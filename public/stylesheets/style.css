@@ -1,0 +1,23 @@
+body {
+  padding: 50px;
+  font: 14px "Montserrat", "Lucida Grande", Helvetica, Arial, sans-serif; }
+
+a {
+  color: #00B7FF; }
+
+#login-grid {
+  min-height: 100%;
+  vertical-align: middle;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; }
+
+#login-title {
+  font-size: 5rem; }
+
+#header-title {
+  font-size: 3rem;
+  cursor: pointer; }
+
+/*# sourceMappingURL=style.css.map */

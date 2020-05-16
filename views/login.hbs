@@ -1,0 +1,20 @@
+<div id="login-grid" class="ui centered grid container">
+    <div class="eight wide computer ten wide tablet sixteen wide mobile column">
+        <h1 id="login-title" class="ui centered header">Fibi</h1>
+        <div class="ui hidden divider"></div>
+        <form class="ui large form{{#if fail}} error{{/if}}" action="/auth/login" method="POST">
+            <div class="field">
+                <label>Tên đăng nhập</label>
+                <input type="text" name="username">
+            </div>
+            <div class="field">
+                <label>Mật khẩu</label>
+                <input type="password" name="password">
+            </div>
+            <div class="ui error message">
+                Đăng nhập thất bại
+            </div>
+            <button class="ui right floated primary button" type="submit">Đăng nhập</button>
+        </form>
+    </div>
+</div>

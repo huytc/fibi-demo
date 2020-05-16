@@ -1,0 +1,29 @@
+{{> header }}
+<div class="ui container">
+    <div class="ui two column grid">
+        <div class="column">
+            <h1 class="ui header">Form của tôi</h1>
+        </div>
+        <div class="right aligned column">
+            <button class="ui positive button">Tạo form mới</button>
+        </div>
+    </div>
+    <div class="ui hidden divider"></div>
+    <div class="ui search">
+        <div class="ui fluid icon input">
+            <input type="text" placeholder="Tìm kiếm form">
+            <i class="search icon"></i>
+        </div>
+    </div>
+    <div class="ui relaxed divided list">
+        {{#each forms}}
+        <div class="item">
+            {{this}}
+        </div>
+        {{else}}
+        <div class="ui message">
+            Chưa có form nào
+        </div>
+        {{/each}}
+    </div>
+</div>
