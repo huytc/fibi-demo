@@ -1,0 +1,57 @@
+{{> header }}
+<div class="ui container">
+  {{#if error}}
+  <div class="ui negative message">
+    {{error}}. Trở lại <a href="/forms">Form của tôi</a>.
+  </div>
+  {{else}}
+  <div class="ui breadcrumb">
+    <a class="section" href="/forms">Form của tôi</a>
+    <i class="right angle icon divider"></i>
+    <a class="active section" href="/forms/{{id}}">
+      {{#if name}}
+      {{name}}
+      {{else}}
+      Lỗi
+      {{/if}}
+    </a>
+  </div>
+  <div class="ui divider hidden"></div>
+  {{!-- <div class="ui grid">
+    <div class="right aligned column">
+      <button class="ui positive button" onclick="save()">Lưu</button>
+    </div>
+  </div> --}}
+  <div class="ui grid">
+    <div class="three column row">
+      <div class="three wide column">
+        <div id="qr"></div>
+      </div>
+      <div class="nine wide column">
+        <h1 class="ui header">{{name}}</h1>
+        <a href="https://{{url}}" target="_blank" rel="noopener noreferrer">{{url}}</a>
+      </div>
+      <div class="four wide right aligned column">
+        <a href="/forms/{{id}}/edit">
+          <button class="ui primary button">Sửa</button>
+        </a>
+        <button class="ui negative button" onclick="deleteForm()">Xóa</button>
+      </div>
+    </div>
+  </div>
+  {{/if}}
+</div>
+
+<script>
+  $("#qr").qrcode({ width: 128, height: 128, text: "{{url}}" });
+
+  function deleteForm() {
+    $.ajax({
+      url: "/forms/{{id}}",
+      method: "DELETE",
+      success: function (data) {
+        document.location.href = "/forms"
+      }
+    });
+  }
+</script>

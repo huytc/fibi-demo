@@ -1,0 +1,41 @@
+{{> header }}
+<div class="ui container">
+    <div class="ui breadcrumb">
+        <a class="section" href="/forms">Form của tôi</a>
+        <i class="right angle icon divider"></i>
+        <a class="section" href="/forms/{{id}}">{{name}}</a>
+        <i class="right angle icon divider"></i>
+        <a class="active section" href="/forms/{{id}}/edit">Sửa</a>
+    </div>
+    <div class="ui divider hidden"></div>
+    <div class="ui grid">
+        <div class="right aligned column">
+            <button class="ui positive button" onclick="save()">Lưu</button>
+        </div>
+    </div>
+</div>
+<div id="surveyCreatorContainer"></div>
+
+<script src="/javascripts/survey-creator-init.js"></script>
+<script>
+    creator.text = {{{data}}};
+    function save() {
+        const data = creator.text;
+        $.post("/forms/{{id}}", { data }, data => {
+            if (!!data) {
+                $("body").toast({
+                    class: "success",
+                    position: "bottom right",
+                    message: "Cập nhật form thành công!"
+                });
+            }
+            else {
+                $("body").toast({
+                    class: "error",
+                    position: "bottom right",
+                    message: "Đã xảy ra lỗi trong quá trình lưu form!"
+                });
+            }
+        });
+    }
+</script>

@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "bitly": "^7.1.0",
     "connect-mongo": "^3.2.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -16,8 +17,6 @@
     "http-errors": "~1.6.3",
     "mongoose": "^5.9.14",
     "morgan": "~1.9.1",
-    "node-sass-middleware": "0.11.0",
-    "passport": "^0.4.1",
-    "passport-local": "^1.0.0"
+    "node-sass-middleware": "0.11.0"
   }
 }

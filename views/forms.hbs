@@ -11,16 +11,45 @@
         </div>
     </div>
     <div class="ui hidden divider"></div>
-    <div class="ui search">
+    {{!-- <div class="ui search">
         <div class="ui fluid icon input">
             <input type="text" placeholder="Tìm kiếm form">
             <i class="search icon"></i>
         </div>
-    </div>
+    </div> --}}
     <div class="ui relaxed divided list">
         {{#each forms}}
         <div class="item">
-            {{this}}
+            <div class="ui grid">
+                <div class="two column row">
+                    <div class="ten wide column">
+                        <div class="ui header">
+                            <a href="/forms/{{this._id}}">
+                                {{this.name}}
+                            </a>
+                            {{#ifeq this._id ../new}}
+                            <span style="width: 40px;"> </span>
+                            <span class="ui green horizontal label">Mới</span>
+                            {{/ifeq}}
+                        </div>
+                    </div>
+                    <div class="six wide right aligned column">
+                        <a href="/forms/{{this._id}}">
+                            <button class="ui labeled icon button">
+                                <i class="info icon"></i>
+                                Chi tiết
+                            </button>
+                        </a>
+                        <a href="/forms/{{this._id}}/edit">
+                            <button class="ui primary labeled icon button">
+                                <i class="edit icon"></i>
+                                Sửa
+                            </button>
+                        </a>
+                        <button class="ui negative button" onclick="deleteForm('{{this._id}}')">Xóa</button>
+                    </div>
+                </div>
+            </div>
         </div>
         {{else}}
         <div class="ui message">
@@ -29,3 +58,15 @@
         {{/each}}
     </div>
 </div>
+
+<script>
+    function deleteForm(id) {
+        $.ajax({
+            url: `/forms/${id}`,
+            method: "DELETE",
+            success: function (data) {
+                document.location.href = "/forms"
+            }
+        });
+    }
+</script>
