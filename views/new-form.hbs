@@ -5,15 +5,25 @@
     <i class="right angle icon divider"></i>
     <a class="active section" href="/forms/new">Tạo form</a>
   </div>
-  <h1 class="ui header">Tạo form</h1>
-  <div class="ui two tiny top attached steps">
-    <div class="active step">
+  <div class="ui divider hidden"></div>
+  <div class="ui grid">
+    {{!-- <div class="column">
+      <h1 class="ui header">Tạo form</h1>
+    </div> --}}
+    <div class="right aligned column">
+      <a href="/forms/new">
+        <button class="ui positive button" onclick="save()">Lưu</button>
+      </a>
+    </div>
+  </div>
+  {{!-- <div class="ui two tiny top attached steps">
+    <div id="info-step" class="active step">
       <i class="info icon"></i>
       <div class="content">
         <div class="title">Nhập thông tin</div>
       </div>
     </div>
-    <div class="step">
+    <div id="design-step" class="step">
       <i class="tasks icon"></i>
       <div class="content">
         <div class="title">Thiết kế form</div>
@@ -21,16 +31,142 @@
     </div>
   </div>
   <div class="ui attached container segment">
-    <form class="ui form">
-      <div class="field">
-        <label>Tên đăng nhập</label>
-        <input type="text" name="username">
+    <div class="ui centered grid">
+      <div class="ten wide column">
+        <div class="ui form">
+          <div class="field">
+            <label>Tên form</label>
+            <input name="form-name" type="text" placeholder="Ví dụ: Đánh giá buổi học ngày 1/1">
+          </div>
+          <div class="ui grid">
+            <div class="right aligned column">
+              <button class="ui primary button" onclick="nextStep();">Tiếp tục</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="field">
-        <label>Mật khẩu</label>
-        <input type="password" name="password">
-      </div>
-      <button class="ui primary button" type="submit">Đăng nhập</button>
-    </form>
-  </div>
+    </div>
+  </div> --}}
 </div>
+<div id="surveyCreatorContainer"></div>
+
+<script>
+  // translation
+  const vnStrings = {
+    //survey templates
+    survey: {
+      edit: "Chỉnh sửa",
+      externalHelpLink: "Xem hướng dẫn tạo form",
+      externalHelpLinkUrl:
+        "https://www.youtube.com/channel/UCH2ru9okIcooNZfpIbyq4qQ?view_as=subscriber",
+      dropQuestion: "Kéo thả câu hỏi vào đây",
+      copy: "Sao chép",
+      addToToolbox: "Thêm vào các loại câu hỏi",
+      deleteQuestion: "Xóa câu hỏi",
+      convertTo: "Chuyển thành",
+      drag: "Kéo",
+    },
+    //questionTypes
+    qt: {
+      default: "Mặc định",
+      checkbox: "Chọn nhiều",
+      dropdown: "Danh sách sổ xuống",
+      radiogroup: "Chọn một",
+      rating: "Đánh giá",
+      text: "Câu trả lời ngắn",
+      comment: "Câu trả lời dài"
+    },
+    //Strings in Editor
+    ed: {
+      defaultLocale: "Mặc định ({0})",
+      survey: "Form",
+      edit: "Chỉnh sửa",
+      newQuestionName: "câu hỏi",
+      newTextItemName: "văn bản",
+      testSurvey: "Chạy thử form",
+      testSurveyAgain: "Chạy thử lần nữa",
+      testSurveyWidth: "Kích thước form: ",
+      designer: "Thiết kế form",
+      undo: "Undo",
+      redo: "Redo",
+      undoTooltip: "Hủy thay đổi vừa thực hiện",
+      redoTooltip: "Khôi phục lại thay đổi vừa thực hiện",
+      options: "Tùy chọn",
+      toolbox: "Các loại câu hỏi",
+      "property-grid": "Thuộc tính",
+      surveyResults: "Kết quả: ",
+      surveyResultsTable: "dưới dạng bảng",
+      surveyResultsJson: "dưới dạng JSON",
+      bold: "In đậm",
+      italic: "In nghiêng",
+      underline: "Gạch dưới",
+      fpAddQuestion: "Thêm câu hỏi..."
+    },
+    // Property Editors
+    pe: {
+      edit: "Chỉnh sửa",
+      move: "Di chuyển",
+      delete: "Xóa",
+      add: "Thêm",
+      addNew: "Thêm mới",
+      addItem: "Thêm một đáp án mới",
+      addOther: "Câu trả lời khác",
+      addSelectAll: "Chọn tất cả",
+      addNone: "Không chọn gì cả",
+      removeAll: "Bỏ hết",
+      // survey
+      showTitle: "Hiện/ẩn tiêu đề",
+      simulator: "Chọn thiết bị",
+      landscapeOrientation: "Xoay ngang",
+      surveyTitlePlaceholder: "Nhập tiêu đề form (VD: Đánh giá buổi học 1/1)",
+      surveyDescriptionPlaceholder: "Nhập mô tả cho form",
+      isRequired: "Câu hỏi bắt buộc?",
+      // Header  adorner
+      logoPosition: "Vị trí logo",
+      addLogo: "Thêm logo...",
+      changeLogo: "Đổi logo...",
+      logoPositions: {
+        none: "Xóa logo",
+        left: "Trái",
+        right: "Phải",
+        top: "Trên",
+        bottom: "Dưới",
+      },
+    },
+    // Test Survey
+    ts: {
+      selectPage: "Chọn trang cần chạy thử:",
+      showInvisibleElements: "Hiển thị các phần tử bị ẩn"
+    }
+  };
+  SurveyCreator.localization.locales["vn"] = vnStrings;
+  SurveyCreator.localization.currentLocale = "vn";
+
+  const options = {
+    showJSONEditorTab: false,
+    questionTypes: [
+      "text",
+      "comment",
+      "checkbox",
+      "radiogroup",
+      "dropdown",
+      "rating"
+    ],
+    pageEditMode: "single",
+    showSurveyTitle: "always",
+    haveCommercialLicense: true
+  };
+  // hide page title
+  Survey.settings.allowShowEmptyTitleInDesignMode = false;
+
+  const creator = new SurveyCreator.SurveyCreator("surveyCreatorContainer", options);
+  SurveyCreator.StylesManager.applyTheme("default");
+
+  creator.showPropertyGrid = "false";
+  // remove toolbar items except undo/redo
+  creator.toolbarItems.splice(2, 5);
+
+  function save() {
+
+  }
+</script>
