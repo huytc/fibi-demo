@@ -1,0 +1,6 @@
+{
+  "events": {
+    "restart": "fuser -k -n tcp 3000",
+    "start": "fuser -k -n tcp 3000"
+  }
+}

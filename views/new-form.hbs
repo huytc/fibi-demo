@@ -1,0 +1,36 @@
+{{> header }}
+<div class="ui container">
+  <div class="ui breadcrumb">
+    <a class="section" href="/forms">Form của tôi</a>
+    <i class="right angle icon divider"></i>
+    <a class="active section" href="/forms/new">Tạo form</a>
+  </div>
+  <h1 class="ui header">Tạo form</h1>
+  <div class="ui two tiny top attached steps">
+    <div class="active step">
+      <i class="info icon"></i>
+      <div class="content">
+        <div class="title">Nhập thông tin</div>
+      </div>
+    </div>
+    <div class="step">
+      <i class="tasks icon"></i>
+      <div class="content">
+        <div class="title">Thiết kế form</div>
+      </div>
+    </div>
+  </div>
+  <div class="ui attached container segment">
+    <form class="ui form">
+      <div class="field">
+        <label>Tên đăng nhập</label>
+        <input type="text" name="username">
+      </div>
+      <div class="field">
+        <label>Mật khẩu</label>
+        <input type="password" name="password">
+      </div>
+      <button class="ui primary button" type="submit">Đăng nhập</button>
+    </form>
+  </div>
+</div>

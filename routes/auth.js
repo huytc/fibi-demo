@@ -7,7 +7,7 @@ const users = {
 
 router.get('/login', function (req, res, next) {
   if (!!req.cookies.username) res.redirect('/forms');
-  res.render('login', { title: 'Đăng nhập | Fibi', fail: req.query.fail });
+  else res.render('login', { title: 'Đăng nhập | Fibi', fail: req.query.fail });
 });
 
 router.post('/login', function (req, res, next) {

@@ -5,6 +5,8 @@
                 <h1 id="header-title" class="ui header">Fibi</h1>
             </div>
             <div class="right aligned column">
+                Xin chào, {{username}}
+                <div style="width: 20px; display: inline-block;"></div>
                 <a href="/auth/logout">
                     <button class="ui basic button">Đăng xuất</button>
                 </a>
@@ -13,7 +15,7 @@
     </div>
 </header>
 <div class="ui divider"></div>
-<div class="ui divider hidden" style="height: 40px;"></div>
+<div class="ui divider hidden" style="height: 20px;"></div>
 <script>
     $('#header-title').on('click', function () {
         document.location.href = "/";
