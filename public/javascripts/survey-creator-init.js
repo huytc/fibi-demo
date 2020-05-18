@@ -72,6 +72,8 @@ const vnStrings = {
         surveyTitlePlaceholder: "Nhập tiêu đề form (VD: Đánh giá buổi học 1/1)",
         surveyDescriptionPlaceholder: "Nhập mô tả cho form",
         isRequired: "Câu hỏi bắt buộc?",
+        editChoices: "Sửa các lựa chọn",
+        showChoices: "Hiển thị các lựa chọn",
         // Header  adorner
         logoPosition: "Vị trí logo",
         addLogo: "Thêm logo...",
@@ -81,8 +83,8 @@ const vnStrings = {
             left: "Trái",
             right: "Phải",
             top: "Trên",
-            bottom: "Dưới",
-        },
+            bottom: "Dưới"
+        }
     },
     // Test Survey
     ts: {
