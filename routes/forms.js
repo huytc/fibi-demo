@@ -32,17 +32,20 @@ router.get('/:id', async function (req, res, next) {
       const answerData = answers.map(answer => JSON.parse(answer.data));
       const formData = JSON.parse(form.data);
 
-      const headers = formData.pages[0].elements.map(element => {
-        return {
-          name: element.name,
-          title: element.title
-        };
-      });
+      const headers = formData.pages[0].elements
+        ? formData.pages[0].elements.map(element => {
+          return {
+            name: element.name,
+            title: element.title
+          };
+        })
+        : [];
 
       for (const item of answerData) {
         for (const questionName of Object.keys(item)) {
           const choiceName = item[questionName];
           const question = formData.pages[0].elements.find(question => question.name === questionName);
+          if (question.type !== 'dropdown' && question.type !== 'checkbox' && question.type !== 'radiogroup') continue;
           for (const choice of question.choices) {
             if (choice === choiceName) break;
             if (choice.value === choiceName) {
