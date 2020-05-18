@@ -26,6 +26,11 @@ hbs.registerHelper('ifeq', function (a, b, options) {
   return options.inverse(this);
 });
 
+hbs.registerHelper('ifne', function (a, b, options) {
+  if (a != b) { return options.fn(this); }
+  return options.inverse(this);
+});
+
 // connect to database
 const { DB_HOST, DB_USER, DB_PASSWORD } = process.env;
 mongoose.connect(`mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:27017/fibi`,
