@@ -71,6 +71,7 @@
     });
   }
 
+  {{#ifne {{numAnswers}} 0}}
   $(document).ready(function () {
     $.fn.dataTable.ext.errMode = 'none';
     $('#answers-container').show();
@@ -83,4 +84,5 @@
       ]
     });
   });
+  {{/ifne}}
 </script>
