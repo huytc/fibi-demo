@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const users = {
-  'fibi': 'fibi'
+  'fibi': 'fibi',
+  'admin': 'fibi2020'
 };
 
 router.get('/login', function (req, res, next) {
