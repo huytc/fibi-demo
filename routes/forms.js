@@ -31,12 +31,27 @@ router.get('/:id', async function (req, res, next) {
       const answers = await Answer.find({ form: form._id });
       const answerData = answers.map(answer => JSON.parse(answer.data));
       const formData = JSON.parse(form.data);
+
       const headers = formData.pages[0].elements.map(element => {
         return {
           name: element.name,
           title: element.title
         };
       });
+
+      for (const item of answerData) {
+        for (const questionName of Object.keys(item)) {
+          const choiceName = item[questionName];
+          const question = formData.pages[0].elements.find(question => question.name === questionName);
+          for (const choice of question.choices) {
+            if (choice === choiceName) break;
+            if (choice.value === choiceName) {
+              item[questionName] = choice.text;
+              break;
+            }
+          }
+        }
+      }
 
       res.render('form', {
         title: `${form.name} | Fibi`, username, id, name, url, answers: JSON.stringify(answerData),
