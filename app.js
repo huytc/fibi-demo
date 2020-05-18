@@ -13,6 +13,8 @@ const MongoStore = require('connect-mongo')(session);
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const formsRouter = require('./routes/forms');
+const fillRouter = require('./routes/fill');
+const answersRouter = require('./routes/answers');
 
 const authMiddleware = require('./middlewares/auth');
 
@@ -62,6 +64,8 @@ app.use(session({
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/forms', authMiddleware(), formsRouter);
+app.use('/f', fillRouter);
+app.use('/answers', answersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
