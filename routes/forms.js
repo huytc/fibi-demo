@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Form = require('../db/models/form');
+const Answer = require('../db/models/answer');
 const us = require('../utils/url-shortener');
 
 const { FILL_FORM_URL } = process.env;
@@ -27,7 +28,20 @@ router.get('/:id', async function (req, res, next) {
       res.render('form', { title: 'Lỗi | Fibi', username, error: 'Bạn không có quyền truy cập form này' });
     } else {
       const { name, url } = form;
-      res.render('form', { title: `${form.name} | Fibi`, username, id, name, url });
+      const answers = await Answer.find({ form: form._id });
+      const answerData = answers.map(answer => JSON.parse(answer.data));
+      const formData = JSON.parse(form.data);
+      const headers = formData.pages[0].elements.map(element => {
+        return {
+          name: element.name,
+          title: element.title
+        };
+      });
+
+      res.render('form', {
+        title: `${form.name} | Fibi`, username, id, name, url, answers: JSON.stringify(answerData),
+        numAnswers: answers.length, headers: headers
+      });
     }
   } catch {
     res.render('form', { title: 'Lỗi | Fibi', username, error: 'Không tìm thấy form' });

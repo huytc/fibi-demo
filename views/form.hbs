@@ -1,4 +1,8 @@
 {{> header }}
+
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+<script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
 <div class="ui container">
   {{#if error}}
   <div class="ui negative message">
@@ -17,11 +21,6 @@
     </a>
   </div>
   <div class="ui divider hidden"></div>
-  {{!-- <div class="ui grid">
-    <div class="right aligned column">
-      <button class="ui positive button" onclick="save()">Lưu</button>
-    </div>
-  </div> --}}
   <div class="ui grid">
     <div class="three column row">
       <div class="three wide column">
@@ -30,6 +29,8 @@
       <div class="nine wide column">
         <h1 class="ui header">{{name}}</h1>
         <a href="https://{{url}}" target="_blank" rel="noopener noreferrer">{{url}}</a>
+        <div class="ui divider hidden"></div>
+        <strong>Lượt trả lời:&nbsp;</strong>{{numAnswers}}
       </div>
       <div class="four wide right aligned column">
         <a href="/forms/{{id}}/edit">
@@ -38,6 +39,21 @@
         <button class="ui negative button" onclick="deleteForm()">Xóa</button>
       </div>
     </div>
+  </div>
+  <div class="ui divider"></div>
+  <div id="answers-container" style="display:none;">
+    <h2 class="ui header">Câu trả lời</h2>
+    <table id="answers-table">
+      <thead>
+        <tr>
+          {{#each headers}}
+          <th>
+            {{this.title}}
+          </th>
+          {{/each}}
+        </tr>
+      </thead>
+    </table>
   </div>
   {{/if}}
 </div>
@@ -54,4 +70,17 @@
       }
     });
   }
+
+  $(document).ready(function () {
+    $.fn.dataTable.ext.errMode = 'none';
+    $('#answers-container').show();
+    $('#answers-table').DataTable({
+      data: {{{ answers }}},
+      columns: [
+        {{#each headers}}
+        { data: "{{this.name}}" },
+        {{/each}}
+      ]
+    });
+  });
 </script>

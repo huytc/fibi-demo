@@ -17,11 +17,13 @@
 <script src="/javascripts/survey-creator-init.js"></script>
 <script>
   creator.text = "";
+  
   function create() {
-    const data = creator.text;
-    $.post("/forms", { data }, data => {
-      if (!!data) {
-        document.location.href = `/forms?new=${data}`;
+    const data = JSON.parse(creator.text);
+    if (!data.title) data.title = "(Không có tiêu đề)";
+    $.post("/forms", { data: JSON.stringify(data) }, result => {
+      if (!!result) {
+        document.location.href = `/forms?new=${result}`;
       }
       else {
         $("body").toast({

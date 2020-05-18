@@ -19,15 +19,20 @@
 <script src="/javascripts/survey-creator-init.js"></script>
 <script>
     creator.text = {{{data}}};
+    
     function save() {
-        const data = creator.text;
-        $.post("/forms/{{id}}", { data }, data => {
-            if (!!data) {
+        const data = JSON.parse(creator.text);
+        if (!data.title) data.title = "(Không có tiêu đề)";
+        $.post("/forms/{{id}}", { data: JSON.stringify(data) }, result => {
+            if (!!result) {
                 $("body").toast({
                     class: "success",
                     position: "bottom right",
+                    showProgress: "bottom",
+                    displayTime: 2000,
                     message: "Cập nhật form thành công!"
                 });
+                setTimeout(() => document.location.reload(), 2000);
             }
             else {
                 $("body").toast({
