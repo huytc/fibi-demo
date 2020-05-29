@@ -32,38 +32,42 @@ router.get('/:id', async function (req, res, next) {
       const answerData = answers.map(answer => JSON.parse(answer.data));
       const formData = JSON.parse(form.data);
 
-      const headers = formData.pages[0].elements
-        ? formData.pages[0].elements.map(element => {
-          return {
-            name: element.name,
-            title: element.title
-          };
-        })
-        : [];
+      // const headers = formData.pages[0].elements
+      //   ? formData.pages[0].elements.map(element => {
+      //     return {
+      //       name: element.name,
+      //       title: element.title
+      //     };
+      //   })
+      //   : [];
 
-      for (const item of answerData) {
-        for (const questionName of Object.keys(item)) {
-          let answers = item[questionName];
-          if (!(answers instanceof Array)) answers = [answers];
-          const question = formData.pages[0].elements.find(question => question.name === questionName);
-          if (question.type !== 'dropdown' && question.type !== 'checkbox' && question.type !== 'radiogroup') continue;
+      // for (const item of answerData) {
+      //   for (const questionName of Object.keys(item)) {
+      //     let answers = item[questionName];
+      //     if (!(answers instanceof Array)) answers = [answers];
+      //     const question = formData.pages[0].elements.find(question => question.name === questionName);
+      //     if (question.type !== 'dropdown' && question.type !== 'checkbox' && question.type !== 'radiogroup') continue;
 
-          for (let i = 0; i < answers.length; i++) {
-            for (const choice of question.choices) {
-              if (choice === answers[i]) break;
-              if (choice.value === answers[i]) {
-                answers[i] = choice.text;
-                break;
-              }
-            }
-          }
-          item[questionName] = answers.join(',');
-        }
-      }
+      //     for (let i = 0; i < answers.length; i++) {
+      //       for (const choice of question.choices) {
+      //         if (choice === answers[i]) break;
+      //         if (choice.value === answers[i]) {
+      //           answers[i] = choice.text;
+      //           break;
+      //         }
+      //       }
+      //     }
+      //     item[questionName] = answers.join(',');
+      //   }
+      // }
 
+      answerData.stringified = JSON.stringify(answerData);
+      formData.stringified = JSON.stringify(formData);
+      
       res.render('form', {
-        title: `${form.name} | Fibi`, username, id, name, url, answers: JSON.stringify(answerData),
-        numAnswers: answers.length, headers: headers
+        title: `${form.name} | Fibi`, username, id, name, url, 
+        answers: answerData,
+        form: formData
       });
     }
   } catch {

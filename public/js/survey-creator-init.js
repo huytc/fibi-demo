@@ -112,7 +112,7 @@ const options = {
 // hide page title
 Survey.settings.allowShowEmptyTitleInDesignMode = false;
 
-const creator = new SurveyCreator.SurveyCreator("surveyCreatorContainer", options);
+const creator = new SurveyCreator.SurveyCreator("survey-creator-container", options);
 SurveyCreator.StylesManager.applyTheme("default");
 
 creator.showPropertyGrid = "false";
