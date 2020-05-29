@@ -30,7 +30,7 @@
         <h1 class="ui header">{{name}}</h1>
         <a href="http://{{url}}" target="_blank" rel="noopener noreferrer">{{url}}</a>
         <div class="ui divider hidden"></div>
-        <strong>Lượt trả lời:&nbsp;</strong>{{numAnswers}}
+        <strong>Lượt trả lời:&nbsp;</strong>{{answers.length}}
       </div>
       <div class="four wide right aligned column">
         <a href="/forms/{{id}}/edit">
@@ -46,15 +46,9 @@
     <table id="answers-table">
       <thead>
         <tr>
-          {{#each headers}}
-          <th>
-            {{this.title}}
-          </th>
-          {{/each}}
         </tr>
       </thead>
     </table>
-    <canvas id="myChart" width="400" height="400"></canvas>
   </div>
   {{/if}}
 </div>
@@ -72,54 +66,137 @@
     });
   }
 
-  {{#ifne numAnswers 0 }}
+  {{#ifne answers.length 0 }}
   $(document).ready(function () {
     $.fn.dataTable.ext.errMode = 'none';
     $('#answers-container').show();
-    $('#answers-table').DataTable({
-      data: {{{ answers }}},
-    columns: [
-      {{#each headers}}
-      { data: "{{this.name}}" },
-      {{/each}}
-    ]
-    });
-  });
 
-  var ctx = document.getElementById('myChart').getContext('2d');
-  var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)'
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)'
-        ],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
+    // append headers
+    const survey = new Survey.Survey({{{form.stringified}}});
+    const questions = survey.getAllQuestions();
+    const headers = questions.map(question => new Object({
+      title: question.title,
+      name: question.name
+    }));
+    $('#answers-table > thead > tr')
+      .first()
+      .append(headers.map(header => `<th>${header.title}</th>`));
+
+    // get answer texts
+    const answers = {{{ answers.stringified }}};
+    const texts = JSON.parse(JSON.stringify(answers));
+
+    for (const question of questions) {
+      const type = question.getType();
+      const { choices } = question;
+      if (type === 'checkbox') {
+        for (const text of texts) {
+          text[question.name] = text[question.name]
+              .map(value =>
+                choices.find(choice => choice.value === value).text)
+              .join(', ');
+        }
+      } else if (type === 'dropdown' || type === 'radiogroup') {
+        for (const text of texts) {
+          text[question.name] = 
+                choices.find(choice => 
+                  choice.value === text[question.name])?.text;
+        }
+      } else if (type === 'rating') {
+        const { rateValues } = question;
+        for (const text of texts) {
+          text[question.name] = 
+                rateValues.find(rateValue => 
+                  rateValue.value === text[question.name])?.text;
+        }
+      }
+    }
+
+    // populate datatable
+    $('#answers-table').DataTable({
+      data: texts,
+      columns: headers.map(header => new Object({
+        data: header.name
+      }))
+    });
+
+    // add charts
+    for (const question of questions) {
+      const type = question.getType();
+
+      if (['checkbox', 'dropdown', 'radiogroup', 'rating'].includes(type)) {
+        // transform data        
+        let data = null;
+        let labels = null;
+        if (type === 'checkbox') {
+          const { choices } = question;
+          const choiceValueToIndex = {};
+          for (const [index, choice] of choices.entries()) {
+            choiceValueToIndex[choice.value] = index;
           }
-        }]
+
+          data = Array(choices.length).fill(0);
+          labels = choices.map(choice => choice.text);
+
+          for (const answer of answers) {
+            for (const item of answer[question.name]) {
+              index = choiceValueToIndex[item];
+              data[index] += 1;
+            }
+          }
+        } else if (type === 'dropdown' || type === 'radiogroup') {
+          const { choices } = question;
+          const choiceValueToIndex = {};
+          for (const [index, choice] of choices.entries()) {
+            choiceValueToIndex[choice.value] = index;
+          }
+
+          data = Array(choices.length).fill(0);
+          labels = choices.map(choice => choice.text);
+
+          for (const answer of answers) {
+            index = choiceValueToIndex[answer[question.name]];
+            data[index] += 1;
+          }
+        } else {
+          const { rateValues } = question;
+          const rateValueToIndex = {};
+          for (const [index, rateValue] of rateValues.entries()) {
+            rateValueToIndex[rateValue.value] = index;
+          }
+
+          data = Array(rateValues.length).fill(0);
+          labels = rateValues.map(rateValue => rateValue.text);
+
+          for (const answer of answers) {
+            index = rateValueToIndex[answer[question.name]];
+            data[index] += 1;
+          }
+        }
+
+        // add canvas
+        $('#answers-container').append(`<div style="height: 50px;"></div><canvas id="${question.id}"></canvas>`);
+        
+        // create chart
+        const colors = ['salmon', 'palegreen', 'yellow', 'lightblue', 'thistle', 'navy', 'gray'];
+        const config = {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: data,
+                    backgroundColor: colors
+                }],
+                labels: labels
+            },
+            options: {
+                aspectRatio: 2,
+                title: {
+                    display: true,
+                    text: question.title
+                }
+            }
+        };
+        const chart = new Chart($(`#${question.id}`), config);
       }
     }
   });

@@ -1,7 +1,7 @@
-<div id="surveyContainer" style="display:inline-block;width:100%;"></div>
+<div id="survey-container" style="display:inline-block;width:100%;"></div>
 
 <script>
-    const survey = new Survey.Model({{{ data }}}, "surveyContainer");
+    const survey = new Survey.Model({{{ data }}}, "survey-container");
     //Use onComplete event to save the data
     survey.onComplete.add(sendDataToServer);
 
