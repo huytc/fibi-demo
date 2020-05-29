@@ -74,13 +74,13 @@
     // append headers
     const survey = new Survey.Survey({{{form.stringified}}});
     const questions = survey.getAllQuestions();
-    const headers = questions.map(question => new Object({
+    const headers = questions?.map(question => new Object({
       title: question.title,
       name: question.name
     }));
     $('#answers-table > thead > tr')
       .first()
-      .append(headers.map(header => `<th>${header.title}</th>`));
+      .append(headers?.map(header => `<th>${header.title}</th>`));
 
     // get answer texts
     const answers = {{{ answers.stringified }}};
@@ -92,7 +92,7 @@
       if (type === 'checkbox') {
         for (const text of texts) {
           text[question.name] = text[question.name]
-              .map(value =>
+              ?.map(value =>
                 choices.find(choice => choice.value === value).text)
               .join(', ');
         }
@@ -115,9 +115,12 @@
     // populate datatable
     $('#answers-table').DataTable({
       data: texts,
-      columns: headers.map(header => new Object({
+      columns: headers?.map(header => new Object({
         data: header.name
-      }))
+      })),
+      language: {
+        url: 'https://cdn.datatables.net/plug-ins/1.10.21/i18n/Vietnamese.json'
+      }
     });
 
     // add charts
@@ -136,9 +139,10 @@
           }
 
           data = Array(choices.length).fill(0);
-          labels = choices.map(choice => choice.text);
+          labels = choices?.map(choice => choice.text);
 
           for (const answer of answers) {
+            if (!answer[question.name]) continue;
             for (const item of answer[question.name]) {
               index = choiceValueToIndex[item];
               data[index] += 1;
@@ -152,7 +156,7 @@
           }
 
           data = Array(choices.length).fill(0);
-          labels = choices.map(choice => choice.text);
+          labels = choices?.map(choice => choice.text);
 
           for (const answer of answers) {
             index = choiceValueToIndex[answer[question.name]];
@@ -166,7 +170,7 @@
           }
 
           data = Array(rateValues.length).fill(0);
-          labels = rateValues.map(rateValue => rateValue.text);
+          labels = rateValues?.map(rateValue => rateValue.text);
 
           for (const answer of answers) {
             index = rateValueToIndex[answer[question.name]];
