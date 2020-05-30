@@ -103,7 +103,7 @@
                   choice.value === text[question.name])?.text;
         }
       } else if (type === 'rating') {
-        const { rateValues } = question;
+        const rateValues = question.visibleRateValues;
         for (const text of texts) {
           text[question.name] = 
                 rateValues.find(rateValue => 
@@ -163,7 +163,7 @@
             data[index] += 1;
           }
         } else {
-          const { rateValues } = question;
+          const rateValues = question.visibleRateValues;
           const rateValueToIndex = {};
           for (const [index, rateValue] of rateValues.entries()) {
             rateValueToIndex[rateValue.value] = index;
