@@ -17,6 +17,7 @@
     "http-errors": "~1.6.3",
     "mongoose": "^5.9.14",
     "morgan": "~1.9.1",
+    "needle": "^2.5.0",
     "node-sass-middleware": "0.11.0"
   }
 }

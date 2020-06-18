@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Form = require('../db/models/form');
 const Answer = require('../db/models/answer');
+const dataMiddleware = require('../middlewares/data');
 
 router.get('/', async function (req, res, next) {
     const { form } = req.query;
@@ -36,10 +37,14 @@ router.post('/', async function (req, res, next) {
         if (!form) return res.status(400).send();
         const answer = new Answer({ form: formId, data });
         await answer.save();
-        res.status(200).send('Submit success');
+
+        // forward data to data middleware
+        res.locals.form = form;
+        res.locals.answer = JSON.parse(answer.data);
+        next();
     } catch {
         res.status(400).send();
     }
-});
+}, dataMiddleware());
 
 module.exports = router;
