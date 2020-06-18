@@ -93,7 +93,7 @@
         for (const text of texts) {
           text[question.name] = text[question.name]
               ?.map(value =>
-                choices.find(choice => choice.value === value).text)
+                choices.find(choice => choice.value === value)?.text)
               .join(', ');
         }
       } else if (type === 'dropdown' || type === 'radiogroup') {
@@ -120,7 +120,9 @@
       })),
       language: {
         url: 'https://cdn.datatables.net/plug-ins/1.10.21/i18n/Vietnamese.json'
-      }
+      },
+      scrollX: true,
+      scrollY: "300px"
     });
 
     // add charts
